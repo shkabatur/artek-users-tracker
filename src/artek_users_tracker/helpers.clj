@@ -41,3 +41,15 @@
                                   :time time
                                   :date-time (get-date-time date time)}))
          parse-result)))
+
+(defonce base-path "/run/user/1000/gvfs/smb-share:server=artek6.corp.artek.org,share=1cbase/Test/")
+
+(defn get-users
+  [file-name]
+  (->
+    (slurp (str base-path file-name))
+    (s/split-lines)
+    (parse-users-time)
+    ((fn [v] (filter #(not= nil (:user %)) v))) ;drop all non-parsed results
+    )
+  )
